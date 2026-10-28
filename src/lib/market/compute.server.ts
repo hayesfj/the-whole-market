@@ -737,7 +737,7 @@ async function loadWeights(): Promise<Holding[]> {
     const raw = (row[tickerCol] ?? "").trim().toUpperCase();
     const weight = Number(row[weightCol] ?? "");
     if (!/^[A-Z][A-Z0-9.-]{0,7}$/.test(raw) || !Number.isFinite(weight) || weight <= 0) continue;
-    const ticker = raw.replace(/\\./g, "-");
+    const ticker = raw.replace(/\./g, "-");
     const name = (row[nameCol] ?? "").trim() || ticker;
     const prev = byTicker.get(ticker);
     byTicker.set(ticker, { ticker, name: prev?.name ?? name, cap: (prev?.cap ?? 0) + weight });
@@ -826,7 +826,7 @@ async function loadTreasury20(fromYear: number, toYear: number): Promise<Series>
   });
   const points: { t: string; v: number }[] = [];
   for (const csv of pages) {
-    const lines = csv.replace(/^\\uFEFF/, "").trim().split(/\\r?\\n/).filter(Boolean);
+    const lines = csv.replace(/^\uFEFF/, "").trim().split(/\r?\n/).filter(Boolean);
     const header = splitCsv(lines[0] ?? "");
     const dateIdx = header.findIndex((cell) => cell.toLowerCase() === "date");
     const col = header.findIndex((cell) => cell === "20 Yr");
@@ -860,7 +860,7 @@ function splitCsv(line: string): string[] {
 }
 
 function usDateToIso(raw: string): string | null {
-  const match = raw.trim().match(/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})$/);
+  const match = raw.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (!match) return null;
   return `${match[3]}-${match[1]!.padStart(2, "0")}-${match[2]!.padStart(2, "0")}`;
 }
@@ -878,7 +878,7 @@ async function loadBreadth(tickers: string[]): Promise<DeskPayload["breadth"]> {
     above50: null,
     above200: null,
   };
-  const unique = [...new Set(tickers.map((ticker) => ticker.replace(/\\./g, "-")))];
+  const unique = [...new Set(tickers.map((ticker) => ticker.replace(/\./g, "-")))];
   const chunks: string[][] = [];
   for (let i = 0; i < unique.length; i += 20) chunks.push(unique.slice(i, i + 20));
   const parts = await mapPool(chunks, 4, (chunk) => sparkCloses(chunk));
@@ -1091,8 +1091,8 @@ function readZip(buf: Buffer): Map<string, Buffer> {
 
 function sharedStrings(xml: string): string[] {
   const out: string[] = [];
-  for (const match of xml.matchAll(/<si\\b[^>]*>([\\s\\S]*?)<\\/si>/g)) {
-    const texts = [...match[1].matchAll(/<t\\b[^>]*>([\\s\\S]*?)<\\/t>/g)].map((part) =>
+  for (const match of xml.matchAll(/<si\b[^>]*>([\s\S]*?)<\/si>/g)) {
+    const texts = [...match[1].matchAll(/<t\b[^>]*>([\s\S]*?)<\/t>/g)].map((part) =>
       decodeXml(part[1] ?? ""),
     );
     out.push(texts.join(""));
@@ -1102,19 +1102,19 @@ function sharedStrings(xml: string): string[] {
 
 function sheetRows(xml: string, strings: string[]): string[][] {
   const rows: string[][] = [];
-  for (const row of xml.matchAll(/<row\\b[^>]*>([\\s\\S]*?)<\\/row>/g)) {
+  for (const row of xml.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)) {
     const cells: string[] = [];
-    for (const cell of row[1].matchAll(/<c\\b([^>]*?)(?:\\/>|>([\\s\\S]*?)<\\/c>)/g)) {
+    for (const cell of row[1].matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
       const attrs = cell[1] ?? "";
       const ref = /r="([A-Z]+)/.exec(attrs)?.[1] ?? "";
       const col = colIndex(ref);
       const kind = /t="([^"]+)"/.exec(attrs)?.[1] ?? "";
       const inner = cell[2] ?? "";
-      const raw = /<v>([\\s\\S]*?)<\\/v>/.exec(inner)?.[1] ?? "";
+      const raw = /<v>([\s\S]*?)<\/v>/.exec(inner)?.[1] ?? "";
       let value = decodeXml(raw);
       if (kind === "s") value = strings[Number(value)] ?? "";
       else if (kind === "inlineStr") {
-        value = [...inner.matchAll(/<t\\b[^>]*>([\\s\\S]*?)<\\/t>/g)].map((part) => decodeXml(part[1] ?? "")).join("");
+        value = [...inner.matchAll(/<t\b[^>]*>([\s\S]*?)<\/t>/g)].map((part) => decodeXml(part[1] ?? "")).join("");
       }
       cells[col] = value;
     }
