@@ -10,7 +10,9 @@ export type CorrelationCard = {
   average: number;
   stdev: number;
   z: number;
+  /** Fraction of the history strictly below the latest print. */
   percentile: number;
+  /** True when this print is on the broken side of its own average. */
   stressed: boolean;
   history: Point[];
   spark: Point[];
@@ -50,6 +52,7 @@ export type VolRow = {
   id: string;
   label: string;
   vol63: number;
+  /** Zero-drift lognormal chance of +5% over 21 sessions, from realized vol. */
   shadowP5: number;
 };
 
