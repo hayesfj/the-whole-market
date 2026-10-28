@@ -453,7 +453,7 @@ function pathDetail(stats: PathStats, net: number | null, aboveShare: number | n
   const breadth =
     net == null
       ? ""
-      : ` Five-day total of 52-week highs minus lows: ${net > 0 ? "+" : "\u2212"}${Math.abs(net)}.`;
+      : ` Five-day total of 52-week highs minus lows: ${net > 0 ? "+" : "−"}${Math.abs(net)}.`;
   const participation =
     aboveShare == null
       ? ""
@@ -474,7 +474,7 @@ function pathNote(stats: PathStats): string {
     stats.drawdown126,
   )} from its high of the last six months. ${spx} The equal-weight S&P (SPXEW) is ${fmtPct(
     stats.ewDrawdown126,
-  )} from its high. $SPXXAI holds today\u2019s S&P (SPX) weights fixed and removes the AI stocks. It is not an official index.`;
+  )} from its high. $SPXXAI holds today’s S&P (SPX) weights fixed and removes the AI stocks. It is not an official index.`;
 }
 
 function buildPaths(
@@ -1270,16 +1270,16 @@ function stressFromLowZ(z: number, fullAt: number): number {
 }
 
 function fmtCorr(n: number): string {
-  return (n < 0 ? "\u2212" : "") + Math.abs(n).toFixed(2);
+  return (n < 0 ? "−" : "") + Math.abs(n).toFixed(2);
 }
 
 function fmtZ(z: number): string {
-  const sign = z > 0 ? "+" : z < 0 ? "\u2212" : "";
-  return `${sign}${Math.abs(z).toFixed(1)}\u03c3`;
+  const sign = z > 0 ? "+" : z < 0 ? "−" : "";
+  return `${sign}${Math.abs(z).toFixed(1)}σ`;
 }
 
 function fmtPct(n: number): string {
-  const sign = n > 0 ? "+" : n < 0 ? "\u2212" : "";
+  const sign = n > 0 ? "+" : n < 0 ? "−" : "";
   return `${sign}${(Math.abs(n) * 100).toFixed(1)}%`;
 }
 
