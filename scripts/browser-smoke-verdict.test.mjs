@@ -389,7 +389,7 @@ test("browser-smoke wires the guard and verdict helpers", () => {
   assert.match(src, /waitUntil: "domcontentloaded"/);
   assert.doesNotMatch(
     src,
-    /waitUntil:\s*["']networkidle["']/, 
+    /waitUntil:\s*["']networkidle["']/,
     "Vite HMR never reaches networkidle",
   );
   assert.match(src, /} finally \{\s*await browser\?\.close\(\);/s);
