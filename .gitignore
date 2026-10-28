@@ -1,0 +1,10 @@
+node_modules
+.vercel
+dist
+.env
+.env.*
+*.log
+.DS_Store
+screenshots
+attachments
+artifacts
