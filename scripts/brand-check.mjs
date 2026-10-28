@@ -151,12 +151,12 @@ function brandWarningsOnDisk({
     if (!existsSync(bannerPath)) {
       warnings.push(
         `BRAND WARNING: this looks like a game/canvas app but ${bannerPath} is missing. `
-          + "Games need a 50:11 X feed card (1200\u00d7264 JPEG) at public/x-banner.jpg \u2014 "
+          + "Games need a 50:11 X feed card (1200×264 JPEG) at public/x-banner.jpg — "
           + `open ${skillPath} and finish the brand-asset pass.`,
       );
     } else if (statSync(bannerPath).size > MAX_CARD_BYTES) {
       warnings.push(
-        `BRAND WARNING: ${bannerPath} is over 600 KB \u2014 link scrapers (X card previews `
+        `BRAND WARNING: ${bannerPath} is over 600 KB — link scrapers (X card previews `
           + "included) time out or skip images this heavy, so the feed card silently fails "
           + `to unfurl. Re-encode as JPEG (ffmpeg -q:v 4) per ${skillPath}.`,
       );
@@ -181,9 +181,9 @@ export function parseBrandCheckArgs(argv) {
       placeholderOk = true;
     } else if (argv[i] === "--root") {
       root = argv[++i];
-      if (root === undefined) return { error: `--root needs a directory \u2014 ${usage}` };
+      if (root === undefined) return { error: `--root needs a directory — ${usage}` };
     } else {
-      return { error: `unexpected argument: ${argv[i]} \u2014 ${usage}` };
+      return { error: `unexpected argument: ${argv[i]} — ${usage}` };
     }
   }
   return { game, placeholderOk, root };
@@ -202,7 +202,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const workspaceRoot = args.root ?? join(dirname(fileURLToPath(import.meta.url)), "..");
   // The caller here is the brand task checking its own work: it is holding the
   // marker (report it, but judge the assets on disk) and it owes a custom card
-  // whether or not the app draws to a canvas \u2014 unless it was launched for a
+  // whether or not the app draws to a canvas — unless it was launched for a
   // plain utility that keeps the placeholder, which only it knows.
   const messages = brandWarningsOnDisk({
     hasCanvas: args.game,
