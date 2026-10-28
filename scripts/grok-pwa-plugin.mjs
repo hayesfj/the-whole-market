@@ -163,7 +163,7 @@ export function grokPwaPlugin() {
     },
     load(id) {
       if (id !== `\0${GROK_OG_IDENTITY_ID}`) return;
-      return `export const grokOgIdentity = ${JSON.stringify(snapshotOgIdentity(root))}`;
+      return `export const grokOgIdentity = ${JSON.stringify(snapshotOgIdentity(root))};`;
     },
     transformIndexHtml(html) {
       return injectGrokPwaHead(html, {
