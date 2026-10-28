@@ -50,7 +50,7 @@ export interface P2PRoomOptions {
   onPeersChanged?: (peers: PeerInfo[]) => void;
   /** Fires for both the unreliable "state" and reliable "reliable" channels. */
   onMessage?: (from: string, data: unknown, channel: "state" | "reliable") => void;
-  /** Fires once, on the first successful signaling poll (registration). */
+  /** Fires once, the first successful signaling poll (registration). */
   onConnected?: () => void;
 }
 
@@ -167,7 +167,7 @@ export class P2PRoom {
     return [...this.peers.values()].map((s) => ({ ...s.info }));
   }
 
-  // ── signaling loop ─────────────────────────────────────────────────────────────
+  // ── signaling loop ───────────────────────────────────────────────────────────────
 
   private schedulePoll(delay: number): void {
     if (this.closed) return;
@@ -474,7 +474,7 @@ export class P2PRoom {
     }
   }
 
-  // ── diagnostics + recovery ───────────────────────────────────────────────────
+  // ── diagnostics + recovery ─────────────────────────────────────────────────────
 
   private pingAll(): void {
     const wire = JSON.stringify({ t: "ping" });
