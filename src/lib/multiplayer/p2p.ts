@@ -50,7 +50,7 @@ export interface P2PRoomOptions {
   onPeersChanged?: (peers: PeerInfo[]) => void;
   /** Fires for both the unreliable "state" and reliable "reliable" channels. */
   onMessage?: (from: string, data: unknown, channel: "state" | "reliable") => void;
-  /** Fires once, the first successful signaling poll (registration). */
+  /** Fires once, on the first successful signaling poll (registration). */
   onConnected?: () => void;
 }
 
